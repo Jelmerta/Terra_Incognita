@@ -8,7 +8,7 @@
 // 3. To then run the generated binary, run: "./kloenk"
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!", sf::Style::Fullscreen); // RenderWindow is een class/type binnen SFML, en die bevindt zich dan in een bepaald namespace, weet ik ook de ballen van joh. Zie dit gewoon als een Integer of whatever type
+    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!"); // RenderWindow is een class/type binnen SFML, en die bevindt zich dan in een bepaald namespace, weet ik ook de ballen van joh. Zie dit gewoon als een Integer of whatever type
     sf::CircleShape shape(100.f); // dit rendert een cirkeltje die shape 
     shape.setFillColor(sf::Color::Green); //dit kleurt hem groen wat
     // wat is sf? Inderdaad vaag, dit is een "namespace". Dit geeft aan vanuit waar, bijvoorbeeld welke library een class (zoals RenderWindow) of functie aangeroepen wordt
