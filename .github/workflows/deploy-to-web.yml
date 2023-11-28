@@ -24,7 +24,7 @@ jobs:
           repository: hydrogax/kloenk
           tag_with_ref: true
           tag_with_sha: true
-          tags: hydrogax/kloenk:latest
+          tags: latest
 
   deploy:
     needs: build
