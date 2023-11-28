@@ -16,11 +16,6 @@ jobs:
       - name: Compile WASM/JS/HTML
         run: mkdir build && emcmake cmake -B build && cd build && make
 
-      - name: Install doctl (to access digital ocean api)
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
       - name: Build and push Docker images
         uses: docker/build-push-action@v1
         with:
@@ -30,6 +25,17 @@ jobs:
           tag_with_ref: true
           tag_with_sha: true
 
-      # - name: Create Droplet and Deploy
-        # run: doctl compute droplet create "$GIT_TAG_NAME" --image docker-18-04 s-1vcpu --region nyc1 --user-data-file deploy.sh --wait
+#  Could be separate job, with ""? Not sure if any benefit...
+  deploy:
+    needs: build
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Install doctl (to access digital ocean api)
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
+      - name: Create Droplet and Deploy
+        run: doctl compute droplet create "$GIT_TAG_NAME" --image docker-18-04 --size s-1vcpu-1gb --region ams3 --user-data-file deploy.sh --wait
