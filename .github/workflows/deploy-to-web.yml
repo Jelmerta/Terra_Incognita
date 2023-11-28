@@ -10,12 +10,19 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v2
 
+      - name: Verify project files
+        run: |
+          ls -a
+
       - name: Make build directory
         run: |
           mkdir build && cd build
 
       - name: Install Emscripten
         uses: mymindstorm/setup-emsdk@v13
+
+      - name: Verify Emscripten install
+        uses: emcc -v
 
       - name: Compile WASM/JS/HTML
         run: emcmake cmake .. && make
