@@ -13,9 +13,11 @@ jobs:
       - name: Make build directory
         run: |
           mkdir build && cd build
-          
+
       - name: Install Emscripten
         uses: lovasoa/setup-emscripten@master
+        with:
+          emscripten-version: '1.38.47'
 
       - name: Compile WASM/JS/HTML
         run: emcmake cmake .. && make
