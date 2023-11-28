@@ -14,7 +14,7 @@ jobs:
         run: |
           ls -a
 
-      - name: Make build directory # && cd build
+      - name: Make build directory
         run: |
           mkdir build
 
