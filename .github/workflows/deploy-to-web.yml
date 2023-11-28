@@ -25,13 +25,15 @@ jobs:
           tag_with_ref: true
           tag_with_sha: true
 
-#  Could be separate job, with ""? Not sure if any benefit...
   deploy:
     needs: build
     
     runs-on: ubuntu-latest
     
     steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+        
       - name: Install doctl (to access digital ocean api)
         uses: digitalocean/action-doctl@v2
         with:
