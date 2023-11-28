@@ -22,7 +22,8 @@ jobs:
         uses: mymindstorm/setup-emsdk@v13
 
       - name: Verify Emscripten install
-        uses: emcc -v
+        run: |
+          emcc -v
 
       - name: Compile WASM/JS/HTML
         run: emcmake cmake .. && make
