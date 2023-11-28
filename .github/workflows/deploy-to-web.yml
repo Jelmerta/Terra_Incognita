@@ -10,24 +10,26 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v2
 
-      - name: Verify project files (DEBUG)
-        run: |
-          ls -a
-
-      - name: Make build directory
-        run: |
-          mkdir build
-
       - name: Install Emscripten
         uses: mymindstorm/setup-emsdk@v13
 
-      - name: Verify Emscripten install (DEBUG)
-        run: |
-          emcc -v
-
-      - name: Verify CMake version (DEBUG)
-        run: |
-          cmake --version
-
       - name: Compile WASM/JS/HTML
-        run: emcmake cmake -B build && cd build && make
+        run: mkdir build && emcmake cmake -B build && cd build && make
+
+      - name: Install doctl (to access digital ocean api)
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: hydrogax/kloenk
+          tag_with_ref: true
+          tag_with_sha: true
+
+      # - name: Create Droplet and Deploy
+        # run: doctl compute droplet create "$GIT_TAG_NAME" --image docker-18-04 s-1vcpu --region nyc1 --user-data-file deploy.sh --wait
+
