@@ -1,3 +1,8 @@
 # Compiled Object files
 *.o
+
+# Build directory
 build
+
+# IDE-related
+.vscode

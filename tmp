@@ -20,24 +20,29 @@
 void processInput(GLFWwindow *window);
 
 const GLuint WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
-unsigned int VAO;
-unsigned int shaderProgram;
 
+// const char *vertexShaderSource = "#version 330 core\n"
 const char *vertexShaderSource = "#version 300 es\n"
+                                 //  "layout (location = 0) in vec3 position;\n"
+                                 //  "precision mediump float;\n"
+                                 //  "in vec3 position;\n"
                                   "layout (location=0) in vec3 position;\n"
                                  "void main()\n"
                                  "{\n"
                                  "gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
                                  "}\0\n";
 
+// const char *fragmentShaderSource = "#version 330 core\n"
 const char *fragmentShaderSource = "#version 300 es\n"
                                    //    "#ifdef GL_ES\n"
                                    "precision mediump float;\n"
                                    //    "#endif\n"
+                                   //    "out vec4 gl_FragColor;\n"
                                    "out vec4 fragColor;\n"
                                    "void main()\n"
                                    "{\n"
                                    "fragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                                   //    "gl_FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
                                    "}\0";
 
 const float vertices[] = {
@@ -58,9 +63,10 @@ void processInput(GLFWwindow *window)
 }
 
 // Game loop
-void render_frame(GLFWwindow *window)
+void render_frame(GLFWwindow *window, unsigned int shaderProgram, unsigned int VAO)
 {
-    std::cout << "Start of game loop" << std::endl; // Debug logging
+    GLenum error5 = glGetError();
+    std::cout << error5 << std::endl;
     // Handle input
     processInput(window);
     glfwPollEvents();
@@ -70,18 +76,28 @@ void render_frame(GLFWwindow *window)
     glClear(GL_COLOR_BUFFER_BIT);
     // glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
+    GLenum error6 = glGetError();
+    std::cout << error6 << std::endl;
+
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
+    GLenum error7 = glGetError();
+    std::cout << error7 << std::endl;
+
+    std::cout << "test" << std::endl;
+
+    // glfwTerminate();
+
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     glfwSwapBuffers(window);
-
 }
 
 int main(int argc, char **argv)
 {
+    std::cout << "wtf" << std::endl;
     glfwInit();
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
@@ -122,6 +138,10 @@ int main(int argc, char **argv)
         return -1;
     }
 
+
+    GLenum error = glGetError();
+    std::cout << error << std::endl;
+
     // ---------------
     // Vertex Shader
     unsigned int vertexShader;
@@ -158,7 +178,12 @@ int main(int argc, char **argv)
                   << infoLogFrag << std::endl;
     }
 
+    unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
+
+
+    GLenum error2 = glGetError();
+    std::cout << error2 << std::endl;
 
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
@@ -174,8 +199,11 @@ int main(int argc, char **argv)
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
+    GLenum error3 = glGetError();
+    std::cout << error3 << std::endl;
+
     // Initialisation code
-    unsigned int VBO;
+    unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
@@ -195,6 +223,9 @@ int main(int argc, char **argv)
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
+    GLenum error4 = glGetError();
+    std::cout << error4 << std::endl;
+
     // ---------------
 
     //     // If this is initialised through window dimension changes, is this needed?
@@ -208,6 +239,9 @@ int main(int argc, char **argv)
         render_frame(window, shaderProgram, VAO);
     }
 #endif
+
+    std::cout << "test2" << std::endl;
+
 
     glfwTerminate();
     return 0;
