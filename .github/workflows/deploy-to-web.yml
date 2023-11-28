@@ -15,9 +15,7 @@ jobs:
           mkdir build && cd build
 
       - name: Install Emscripten
-        uses: lovasoa/setup-emscripten@master
-        with:
-          emscripten-version: '1.38.47'
+        uses: mymindstorm/setup-emsdk@v13
 
       - name: Compile WASM/JS/HTML
         run: emcmake cmake .. && make
