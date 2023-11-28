@@ -14,9 +14,9 @@ jobs:
         run: |
           ls -a
 
-      - name: Make build directory
+      - name: Make build directory # && cd build
         run: |
-          mkdir build && cd build
+          mkdir build
 
       - name: Install Emscripten
         uses: mymindstorm/setup-emsdk@v13
@@ -30,4 +30,4 @@ jobs:
           cmake --version
 
       - name: Compile WASM/JS/HTML
-        run: emcmake cmake .. && make
+        run: emcmake cmake -B build && cd build && make
