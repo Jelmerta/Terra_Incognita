@@ -10,7 +10,7 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v2
 
-      - name: Verify project files
+      - name: Verify project files (DEBUG)
         run: |
           ls -a
 
@@ -21,9 +21,13 @@ jobs:
       - name: Install Emscripten
         uses: mymindstorm/setup-emsdk@v13
 
-      - name: Verify Emscripten install
+      - name: Verify Emscripten install (DEBUG)
         run: |
           emcc -v
+
+      - name: Verify CMake version (DEBUG)
+        run: |
+          cmake --version
 
       - name: Compile WASM/JS/HTML
         run: emcmake cmake .. && make
