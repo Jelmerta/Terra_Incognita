@@ -22,7 +22,7 @@ if (EMSCRIPTEN)
     set_target_properties(kloenk 
         PROPERTIES SUFFIX ".html")
 else()
-    message(STATUS "emscripten environment is NOT loaded")
+    message(STATUS "emscripten environment is NOT loaded (local build)")
 endif()
 
 # Optimise the build (both for debug and release)
@@ -33,3 +33,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O3")
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+# Extra warnings that will hopefully help debugging
+target_compile_options(kloenk PRIVATE -Wall -Wextra)
+

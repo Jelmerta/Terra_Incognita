@@ -90,6 +90,8 @@ int main(int argc, char **argv)
     glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);  
+
     // When window size is changed, make sure that OpenGL is adjusted accordingly
     // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -205,7 +207,7 @@ int main(int argc, char **argv)
 #else
     while (!glfwWindowShouldClose(window))
     {
-        render_frame(window, shaderProgram, VAO);
+        render_frame(window);
     }
 #endif
 
