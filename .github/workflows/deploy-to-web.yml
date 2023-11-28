@@ -33,11 +33,11 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
-        
+
       - name: Install doctl (to access digital ocean api)
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Create Droplet and Deploy
-        run: doctl compute droplet create "$GIT_TAG_NAME" --image docker-18-04 --size s-1vcpu-1gb --region ams3 --user-data-file deploy.sh --wait
+        run: doctl compute droplet create "${{ github.sha }}" --image docker-18-04 --size s-1vcpu-1gb --region ams3 --user-data-file deploy.sh --wait
