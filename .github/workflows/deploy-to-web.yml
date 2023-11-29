@@ -40,5 +40,14 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Create Droplet and Deploy
-        run: doctl compute droplet create "${{ github.sha }}" --image docker-18-04 --size s-1vcpu-1gb --region ams3 --user-data-file deploy.sh --wait
+      - name: Retrieve new container and deploy on server using remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: bash deploy.sh.sh
+
+      # This generates a new droplet for each deployment. This changes the IP which is currently a bit difficult to handle.
+      # - name: Create Droplet and Deploy
+        # run: doctl compute droplet create "${{ github.sha }}" --image docker-18-04 --size s-1vcpu-1gb --region ams3 --user-data-file deploy.sh --wait

@@ -31,9 +31,7 @@ const char *vertexShaderSource = "#version 300 es\n"
                                  "}\0\n";
 
 const char *fragmentShaderSource = "#version 300 es\n"
-                                   //    "#ifdef GL_ES\n"
                                    "precision mediump float;\n"
-                                   //    "#endif\n"
                                    "out vec4 fragColor;\n"
                                    "void main()\n"
                                    "{\n"
@@ -77,7 +75,6 @@ void render_frame(GLFWwindow *window)
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     glfwSwapBuffers(window);
-
 }
 
 int main(int argc, char **argv)
