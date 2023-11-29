@@ -40,6 +40,9 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
+      - name: Sanity check
+        run: ls -a
+
       - name: Retrieve new container and run on server using remote ssh commands
         uses: appleboy/ssh-action@master
         with:
