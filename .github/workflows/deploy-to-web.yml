@@ -43,6 +43,14 @@ jobs:
       - name: Sanity check
         run: ls -a
 
+      - name: Sanity check 2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: ls -a
+
       - name: Retrieve new container and run on server using remote ssh commands
         uses: appleboy/ssh-action@master
         with:
