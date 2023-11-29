@@ -40,24 +40,13 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Sanity check
-        run: ls -a
-
-      - name: Sanity check 2
+      - name: Retrieve new container and run on server using remote ssh commands (not too proud of this, contains contents of retrieve_and_run_container.sh)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          script: ls -a
-
-      - name: Retrieve new container and run on server using remote ssh commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: sh retrieve_and_run_container.sh
+          script: docker pull hydrogax/kloenk && docker rm -f kloenk && docker run -d -p 80:80 --name kloenk hydrogax/kloenk
 
       # This generates a new droplet for each deployment. This changes the IP which is currently a bit difficult to handle.
       # - name: Create Droplet and Deploy
