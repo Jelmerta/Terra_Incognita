@@ -40,14 +40,14 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Retrieve new container and run on server using remote ssh commands (not too proud of this, contains contents of retrieve_and_run_container.sh)
+      # This generates a new droplet for each deployment. This changes the IP which is currently a bit difficult to handle. We therefore use a pre-configured droplet (setup with initialise_server.sh)
+      # - name: Create Droplet and Deploy
+        # run: doctl compute droplet create "${{ github.sha }}" --image docker-18-04 --size s-1vcpu-1gb --region ams3 --user-data-file deploy.sh --wait
+
+      - name: Retrieve new container and run on server using remote ssh commands (not too proud of this, contains contents of retrieve_and_run_container.sh, could instead put this sh script on the server on droplet creation, perhaps including floating IP?)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: docker pull hydrogax/kloenk && docker rm -f kloenk && docker run -d -p 80:80 --name kloenk hydrogax/kloenk
-
-      # This generates a new droplet for each deployment. This changes the IP which is currently a bit difficult to handle.
-      # - name: Create Droplet and Deploy
-        # run: doctl compute droplet create "${{ github.sha }}" --image docker-18-04 --size s-1vcpu-1gb --region ams3 --user-data-file deploy.sh --wait
