@@ -35,7 +35,7 @@ const char *fragmentShaderSource = "#version 300 es\n"
                                    "out vec4 fragColor;\n"
                                    "void main()\n"
                                    "{\n"
-                                   "fragColor = vec4(0.0f, 0.5f, 1.0f, 1.0f);\n"
+                                   "fragColor = vec4(1.0f, 0.5f, 0.0f, 1.0f);\n"
                                    "}\0";
 
 const float vertices[] = {

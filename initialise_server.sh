@@ -8,6 +8,7 @@ sudo usermod --lock deploy
 sudo -i -u deploy
 ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -C "deploy@server"
 cat .ssh/id_ed25519.pub > .ssh/authorized_keys
+# cat .ssh/id_ed25519 and save the string to clipboard for next step
 # cat .ssh/id_ed25519.pub and save the string to clipboard for next step
 
 # Perform the necessary GitHub steps, add 3 secrets and a deploy key
