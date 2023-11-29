@@ -21,10 +21,11 @@ void processInput(GLFWwindow *window);
 
 const GLuint WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 unsigned int VAO;
+unsigned int EBO;
 unsigned int shaderProgram;
 
 const char *vertexShaderSource = "#version 300 es\n"
-                                  "layout (location=0) in vec3 position;\n"
+                                 "layout (location=0) in vec3 position;\n"
                                  "void main()\n"
                                  "{\n"
                                  "gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
@@ -38,10 +39,17 @@ const char *fragmentShaderSource = "#version 300 es\n"
                                    "fragColor = vec4(1.0f, 0.5f, 0.0f, 1.0f);\n"
                                    "}\0";
 
-const float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    0.0f, 0.5f, 0.0f};
+// Square
+float vertices[] = {
+    0.5f, 0.5f, 0.0f,   // top right
+    0.5f, -0.5f, 0.0f,  // bottom right
+    -0.5f, -0.5f, 0.0f, // bottom left
+    -0.5f, 0.5f, 0.0f   // top left
+};
+
+unsigned int indices[] = {
+    0, 1, 3,
+    1, 2, 3};
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
@@ -70,8 +78,8 @@ void render_frame(GLFWwindow *window)
 
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0); // Not really sure why used in tutorial, should look up. Already set outside of loop
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     glfwSwapBuffers(window);
@@ -87,7 +95,7 @@ int main(int argc, char **argv)
     glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);  
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
     // When window size is changed, make sure that OpenGL is adjusted accordingly
     // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -175,8 +183,11 @@ int main(int argc, char **argv)
 
     // Initialisation code
     unsigned int VBO;
-    glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+
+    glGenVertexArrays(1, &VAO);
+
+    glGenBuffers(1, &EBO);
 
     // 1. bind Vertex Array Object
     glBindVertexArray(VAO);
@@ -185,7 +196,12 @@ int main(int argc, char **argv)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    // 3. Set Vertex Attribute pointers
+    // 3. copy our index array in a element buffer for OpenGL to use (so we reuse the same vertices instead of duplicating)
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+
+    // 4. Set Vertex Attribute pointers
 
     // Do we need to get position dynamically, because of GLES? Not defined in shader
     // GLint positionAttribute = glGetAttribLocation(shaderProgram, "position");
@@ -196,6 +212,7 @@ int main(int argc, char **argv)
     glEnableVertexAttribArray(0);
     // ---------------
 
+    // glPolygonOffset()
     //     // If this is initialised through window dimension changes, is this needed?
     // glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -207,6 +224,10 @@ int main(int argc, char **argv)
         render_frame(window);
     }
 #endif
+
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteProgram(shaderProgram);
 
     glfwTerminate();
     return 0;
