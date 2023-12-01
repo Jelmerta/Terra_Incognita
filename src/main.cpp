@@ -17,27 +17,17 @@
 #include <GLFW/glfw3native.h>
 #endif
 
+#include "shader_m.h"
+
+#include <glm/glm.hpp>
+
 void processInput(GLFWwindow *window);
 
 const GLuint WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 unsigned int VAO;
 unsigned int EBO;
-unsigned int shaderProgram;
-
-const char *vertexShaderSource = "#version 300 es\n"
-                                 "layout (location=0) in vec3 position;\n"
-                                 "void main()\n"
-                                 "{\n"
-                                 "gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
-                                 "}\0\n";
-
-const char *fragmentShaderSource = "#version 300 es\n"
-                                   "precision mediump float;\n"
-                                   "out vec4 fragColor;\n"
-                                   "void main()\n"
-                                   "{\n"
-                                   "fragColor = vec4(1.0f, 0.5f, 0.0f, 1.0f);\n"
-                                   "}\0";
+// unsigned int shaderProgram;
+Shader* ourShader;
 
 // Square
 float vertices[] = {
@@ -66,7 +56,6 @@ void processInput(GLFWwindow *window)
 // Game loop
 void render_frame(GLFWwindow *window)
 {
-    std::cout << "Start of game loop" << std::endl; // Debug logging
     // Handle input
     processInput(window);
     glfwPollEvents();
@@ -76,7 +65,8 @@ void render_frame(GLFWwindow *window)
     glClear(GL_COLOR_BUFFER_BIT);
     // glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    glUseProgram(shaderProgram);
+    ourShader->use();
+    // glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0); // Not really sure why used in tutorial, should look up. Already set outside of loop
@@ -129,57 +119,8 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    // ---------------
-    // Vertex Shader
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    // error log for compilation
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
-    }
-
-    // Fragment Shader
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    // error log for compilation
-    int successFrag;
-    char infoLogFrag[512];
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &successFrag);
-    if (!successFrag)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLogFrag);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-                  << infoLogFrag << std::endl;
-    }
-
-    shaderProgram = glCreateProgram();
-
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR: Shader linking failed\n"
-                  << infoLog << std::endl;
-    }
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    // ourShader = new Shader("shaders/fragment/basic_positions.vs", "shaders/fragment/basic_colours.fs");
+    ourShader = new Shader("../src/basic_positions.vs", "../src/basic_colours.fs");
 
     // Initialisation code
     unsigned int VBO;
@@ -210,6 +151,8 @@ int main(int argc, char **argv)
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
+
+    ourShader->use();
     // ---------------
 
     // glPolygonOffset()
@@ -225,9 +168,10 @@ int main(int argc, char **argv)
     }
 #endif
 
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
+// Cleanup code... Don't just delete this, make sure this gets cleaned up
+    // glDeleteVertexArrays(1, &VAO);
+    // glDeleteBuffers(1, &VBO);
+    // glDeleteProgram(shaderProgram);
 
     glfwTerminate();
     return 0;

@@ -5,10 +5,10 @@ project(
     VERSION 0.1.0
     LANGUAGES CXX C)
 
-add_executable(kloenk src/main.cpp)
+add_executable(kloenk src/main.cpp src/shader_m.h ${TARGET_H})
+target_include_directories(kloenk PUBLIC include)
 
 add_subdirectory(glad/)
-
 target_link_libraries(kloenk PRIVATE glfw glad)
 
 # When we build for web, we use emscripten to generate WASM/JS/HTML files.
