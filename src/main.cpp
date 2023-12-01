@@ -143,7 +143,6 @@ int main(int argc, char **argv)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-
     // 4. Set Vertex Attribute pointers
 
     // Do we need to get position dynamically, because of GLES? Not defined in shader
