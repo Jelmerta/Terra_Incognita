@@ -122,7 +122,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    ourShader = new Shader("include/shaders/vertex/basic_positions.vs", "include/shaders/fragment/basic_colours.fs");
+    ourShader = new Shader("resources/shaders/vertex/basic_positions.vs", "resources/shaders/fragment/basic_colours.fs");
 
     // Initialisation code
     unsigned int VBO;

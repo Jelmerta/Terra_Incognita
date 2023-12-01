@@ -18,10 +18,10 @@ add_executable(kloenk src/main.cpp)
 
 # include_directories("include")
 
-# add_custom_target(copy_assets
-#     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/include ${CMAKE_CURRENT_BINARY_DIR}/include
-# )
-# add_dependencies(kloenk copy_assets)
+add_custom_target(copy_resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/resources
+)
+add_dependencies(kloenk copy_resources)
 
 # add_custom_command(TARGET kloenk PRE_BUILD
 #                 COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -29,9 +29,9 @@ add_executable(kloenk src/main.cpp)
 #                 COMMENT "Copied files from include to binary")    
 
 # add_custom_command(TARGET kloenk POST_BUILD
-#                 COMMAND ${CMAKE_COMMAND} -E copy_directory
-#                 ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/
-#                 COMMENT "Copied files from include to binary")    
+                # COMMAND ${CMAKE_COMMAND} -E copy_directory
+                # ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/
+                # COMMENT "Copied files from include to binary")    
 
 target_include_directories(kloenk PRIVATE include)
 
@@ -50,7 +50,7 @@ if (EMSCRIPTEN)
     set_target_properties(kloenk 
         PROPERTIES SUFFIX ".html")
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --embed-file include")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --embed-file resources")
 else()
     message(STATUS "emscripten environment is NOT loaded (local build)")
 endif()
