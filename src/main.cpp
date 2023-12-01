@@ -21,6 +21,9 @@
 
 #include <glm/glm.hpp>
 
+#include <filesystem>
+
+
 void processInput(GLFWwindow *window);
 
 const GLuint WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
@@ -119,8 +122,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    // ourShader = new Shader("shaders/fragment/basic_positions.vs", "shaders/fragment/basic_colours.fs");
-    ourShader = new Shader("../src/basic_positions.vs", "../src/basic_colours.fs");
+    ourShader = new Shader("include/shaders/vertex/basic_positions.vs", "include/shaders/fragment/basic_colours.fs");
 
     // Initialisation code
     unsigned int VBO;

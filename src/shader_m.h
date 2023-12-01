@@ -31,8 +31,6 @@ public:
         try 
         {
             // open files
-            // std::cout << std::filesystem::exists("../src/basic_positions.vs") << std::endl;
-            // std::cout << std::filesystem::current_path() << std::endl;
             vShaderFile.open(vertexPath);
             fShaderFile.open(fragmentPath);
             std::stringstream vShaderStream, fShaderStream;
