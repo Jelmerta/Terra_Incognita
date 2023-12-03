@@ -29,22 +29,53 @@
 void processInput(GLFWwindow *window);
 
 const GLuint WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
-unsigned int VAO;
-unsigned int EBO;
+unsigned int VAO_PLANE;
+unsigned int VAO_CUBE;
 // unsigned int shaderProgram;
 Shader* ourShader;
 
 // Square
-float vertices[] = {
-    0.5f, 0.5f, 0.0f,   // top right
-    0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f, // bottom left
-    -0.5f, 0.5f, 0.0f   // top left
+float vertices_plane[] = {
+    1.0f, 1.0f, 0.0f,   // top right
+    1.0f, -1.0f, 0.0f,  // bottom right
+    -1.0f, -1.0f, 0.0f, // bottom left
+    -1.0f, 1.0f, 0.0f   // top left
 };
 
-unsigned int indices[] = {
+unsigned int indices_plane[] = {
     0, 1, 3,
     1, 2, 3};
+
+float cube[] = {
+    0.5f,  0.5f,  0.5f,  // + + +
+     0.5f,  0.5f, -0.5f, // + + -
+     0.5f, -0.5f,  0.5f, // + - +
+     0.5f, -0.5f, -0.5f, // + - -
+    -0.5f,  0.5f, 0.5f, // - + +
+    -0.5f,  0.5f, -0.5f, // - + -
+    -0.5f,  -0.5f, 0.5f, // - - +
+    -0.5f,  -0.5f, -0.5f // - - -
+};
+
+unsigned int cube_indices[] = {
+    7, 3, 1,
+    1, 5, 7,
+
+    6, 2, 0,
+    0, 4, 6,
+
+    4, 5, 7,
+    7, 6, 4,
+
+    0, 1, 3,
+    3, 2, 0,
+
+    7, 1, 2,
+    2, 6, 7,
+
+    5, 1, 0,
+    0, 4, 5
+};
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
@@ -71,14 +102,13 @@ void render_frame(GLFWwindow *window)
     // glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
     ourShader->use();
-    // glUseProgram(shaderProgram);
 
     // create transformations
     glm::mat4 model         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
     glm::mat4 view          = glm::mat4(1.0f);
     glm::mat4 projection    = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    view  = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    view  = glm::translate(glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(0.0f, -3.0f, -3.0f));
     projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
     // retrieve the matrix uniform locations
     unsigned int modelLoc = glGetUniformLocation(ourShader->ID, "model");
@@ -89,9 +119,15 @@ void render_frame(GLFWwindow *window)
     // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
     ourShader->setMat4("projection", projection);
 
-    glBindVertexArray(VAO);
+    ourShader->setVec4("ourColor", glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
+    glBindVertexArray(VAO_PLANE);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0); // Not really sure why used in tutorial, should look up. Already set outside of loop
+
+    ourShader->setVec4("ourColor", glm::vec4(0.2f, 0.8f, 0.2f, 1.0f));
+    glBindVertexArray(VAO_CUBE);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(0); // Reset bound array
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     glfwSwapBuffers(window);
@@ -143,24 +179,26 @@ int main(int argc, char **argv)
 
     ourShader = new Shader("resources/shaders/vertex/basic_positions.vs", "resources/shaders/fragment/basic_colours.fs");
 
+    // PLANE CODE
     // Initialisation code
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-
-    glGenVertexArrays(1, &VAO);
-
-    glGenBuffers(1, &EBO);
+    unsigned int VBO_PLANE;
+    glGenBuffers(1, &VBO_PLANE);
+    
+    unsigned int EBO_PLANE;
+    glGenBuffers(1, &EBO_PLANE);
+    
+    glGenVertexArrays(1, &VAO_PLANE);
 
     // 1. bind Vertex Array Object
-    glBindVertexArray(VAO);
+    glBindVertexArray(VAO_PLANE);
 
     // 2. copy our vertices array in a buffer for OpenGL to use
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_PLANE);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_plane), vertices_plane, GL_STATIC_DRAW);
 
     // 3. copy our index array in a element buffer for OpenGL to use (so we reuse the same vertices instead of duplicating)
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_PLANE);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices_plane), indices_plane, GL_STATIC_DRAW);
 
     // 4. Set Vertex Attribute pointers
 
@@ -171,6 +209,43 @@ int main(int argc, char **argv)
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
+
+    // CUBE CODE
+    // Initialisation code
+    unsigned int VBO_CUBE;
+    glGenVertexArrays(1, &VAO_CUBE);
+    
+    glGenBuffers(1, &VBO_CUBE);
+    
+    unsigned int EBO_CUBE;
+    glGenBuffers(1, &EBO_CUBE);
+    
+
+    // 1. bind Vertex Array Object
+    glBindVertexArray(VAO_CUBE);
+
+    // 2. copy our vertices array in a buffer for OpenGL to use
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_CUBE);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+
+    // 3. copy our index array in a element buffer for OpenGL to use (so we reuse the same vertices instead of duplicating)
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_CUBE);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
+
+    // 4. Set Vertex Attribute pointers
+
+    // Do we need to get position dynamically, because of GLES? Not defined in shader
+    // GLint positionAttribute = glGetAttribLocation(shaderProgram, "position");
+    // glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    // glEnableVertexAttribArray(positionAttribute);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+
+    // Reset buffers
+    // glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // glBindVertexArray(0); 
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     ourShader->use();
     // ---------------
