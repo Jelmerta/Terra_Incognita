@@ -96,6 +96,21 @@ void processInput(GLFWwindow *window)
     {
         character.moveNorth();
     }
+
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        character.moveSouth();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        character.moveEast();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        character.moveWest();
+    }
 }
 
 // Game loop
@@ -129,7 +144,7 @@ void render_frame(GLFWwindow *window)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // Move cube around based on input
-    model = glm::translate(glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(0.0f, 0.0f, character.getLatitude()));
+    model = glm::translate(glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(character.getLongitude(), 0.0f, character.getLatitude()));
     ourShader->setMat4("model", model);
 
     ourShader->setVec4("ourColor", glm::vec4(0.2f, 0.8f, 0.2f, 1.0f));

@@ -10,6 +10,21 @@ public:
         latitude += 0.1;
     }
 
+    void moveSouth()
+    {
+        latitude -= 0.1;
+    }
+
+    void moveEast()
+    {
+        longitude += 0.1;
+    }
+
+    void moveWest()
+    {
+        longitude -= 0.1;
+    }
+
     float getLongitude() {
         return longitude;
     }
