@@ -25,6 +25,7 @@
 
 #include <filesystem>
 
+#include "Character.cpp"
 
 void processInput(GLFWwindow *window);
 
@@ -32,7 +33,9 @@ const GLuint WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 unsigned int VAO_PLANE;
 unsigned int VAO_CUBE;
 // unsigned int shaderProgram;
-Shader* ourShader;
+Shader *ourShader;
+
+Character character;
 
 // Square
 float vertices_plane[] = {
@@ -47,14 +50,14 @@ unsigned int indices_plane[] = {
     1, 2, 3};
 
 float cube[] = {
-    0.5f,  0.5f,  0.5f,  // + + +
-     0.5f,  0.5f, -0.5f, // + + -
-     0.5f, -0.5f,  0.5f, // + - +
-     0.5f, -0.5f, -0.5f, // + - -
-    -0.5f,  0.5f, 0.5f, // - + +
-    -0.5f,  0.5f, -0.5f, // - + -
-    -0.5f,  -0.5f, 0.5f, // - - +
-    -0.5f,  -0.5f, -0.5f // - - -
+    0.5f, 0.5f, 0.5f,   // + + +
+    0.5f, 0.5f, -0.5f,  // + + -
+    0.5f, -0.5f, 0.5f,  // + - +
+    0.5f, -0.5f, -0.5f, // + - -
+    -0.5f, 0.5f, 0.5f,  // - + +
+    -0.5f, 0.5f, -0.5f, // - + -
+    -0.5f, -0.5f, 0.5f, // - - +
+    -0.5f, -0.5f, -0.5f // - - -
 };
 
 unsigned int cube_indices[] = {
@@ -74,8 +77,7 @@ unsigned int cube_indices[] = {
     2, 6, 7,
 
     5, 1, 0,
-    0, 4, 5
-};
+    0, 4, 5};
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
@@ -86,7 +88,14 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
         glfwSetWindowShouldClose(window, true);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        character.moveNorth();
+    }
 }
 
 // Game loop
@@ -104,24 +113,24 @@ void render_frame(GLFWwindow *window)
     ourShader->use();
 
     // create transformations
-    glm::mat4 model         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    glm::mat4 view          = glm::mat4(1.0f);
-    glm::mat4 projection    = glm::mat4(1.0f);
+    glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    glm::mat4 view = glm::mat4(1.0f);
+    glm::mat4 projection = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    view  = glm::translate(glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(0.0f, -3.0f, -3.0f));
+    view = glm::translate(glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(0.0f, -3.0f, -3.0f));
     projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
-    // retrieve the matrix uniform locations
-    unsigned int modelLoc = glGetUniformLocation(ourShader->ID, "model");
-    unsigned int viewLoc  = glGetUniformLocation(ourShader->ID, "view");
-    // pass them to the shaders (3 different ways)
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
     // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+    ourShader->setMat4("model", model);
+    ourShader->setMat4("view", view);
     ourShader->setMat4("projection", projection);
 
     ourShader->setVec4("ourColor", glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
     glBindVertexArray(VAO_PLANE);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    // Move cube around based on input
+    model = glm::translate(glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(0.0f, 0.0f, character.getLatitude()));
+    ourShader->setMat4("model", model);
 
     ourShader->setVec4("ourColor", glm::vec4(0.2f, 0.8f, 0.2f, 1.0f));
     glBindVertexArray(VAO_CUBE);
@@ -183,10 +192,10 @@ int main(int argc, char **argv)
     // Initialisation code
     unsigned int VBO_PLANE;
     glGenBuffers(1, &VBO_PLANE);
-    
+
     unsigned int EBO_PLANE;
     glGenBuffers(1, &EBO_PLANE);
-    
+
     glGenVertexArrays(1, &VAO_PLANE);
 
     // 1. bind Vertex Array Object
@@ -214,12 +223,11 @@ int main(int argc, char **argv)
     // Initialisation code
     unsigned int VBO_CUBE;
     glGenVertexArrays(1, &VAO_CUBE);
-    
+
     glGenBuffers(1, &VBO_CUBE);
-    
+
     unsigned int EBO_CUBE;
     glGenBuffers(1, &EBO_CUBE);
-    
 
     // 1. bind Vertex Array Object
     glBindVertexArray(VAO_CUBE);
@@ -244,7 +252,7 @@ int main(int argc, char **argv)
 
     // Reset buffers
     // glBindBuffer(GL_ARRAY_BUFFER, 0);
-    // glBindVertexArray(0); 
+    // glBindVertexArray(0);
     // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     ourShader->use();
@@ -263,7 +271,7 @@ int main(int argc, char **argv)
     }
 #endif
 
-// Cleanup code... Don't just delete this, make sure this gets cleaned up
+    // Cleanup code... Don't just delete this, make sure this gets cleaned up
     // glDeleteVertexArrays(1, &VAO);
     // glDeleteBuffers(1, &VBO);
     // glDeleteProgram(shaderProgram);
