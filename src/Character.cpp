@@ -7,22 +7,22 @@ public:
 
     void moveNorth()
     {
-        latitude += 0.1;
+        latitude += 0.01;
     }
 
     void moveSouth()
     {
-        latitude -= 0.1;
+        latitude -= 0.01;
     }
 
     void moveEast()
     {
-        longitude += 0.1;
+        longitude += 0.01;
     }
 
     void moveWest()
     {
-        longitude -= 0.1;
+        longitude -= 0.01;
     }
 
     float getLongitude() {

@@ -122,7 +122,7 @@ void render_frame(GLFWwindow *window)
 
     // Render
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
     ourShader->use();
@@ -144,7 +144,7 @@ void render_frame(GLFWwindow *window)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // Move cube around based on input
-    model = glm::translate(glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(character.getLongitude(), 0.0f, character.getLatitude()));
+    model = glm::translate(glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::vec3(character.getLongitude(), -0.5f, character.getLatitude()));
     ourShader->setMat4("model", model);
 
     ourShader->setVec4("ourColor", glm::vec4(0.2f, 0.8f, 0.2f, 1.0f));
@@ -200,6 +200,8 @@ int main(int argc, char **argv)
         std::cout << "Failed to initialize OpenGL context" << std::endl;
         return -1;
     }
+
+    glEnable(GL_DEPTH_TEST);
 
     ourShader = new Shader("resources/shaders/vertex/basic_positions.vs", "resources/shaders/fragment/basic_colours.fs");
 
