@@ -5,7 +5,7 @@ project(
     VERSION 0.1.0
     LANGUAGES CXX C)
 
-add_executable(kloenk src/main.cpp)
+add_executable(kloenk src/main.cpp src/GameConstants.h src/EventProcessor.h src/GameObject.cpp src/GameState.h src/GameObject.h src/MeshStore.h src/Mesh.h src/Shader.h src/RenderSystem.h src/GameConstants.h)
 
 # We require resources, such as shaders, to be included in the target.
 # Also possible through add_custom_target and file(COPY) but I believe this always runs when resources are changed, which seems like a good idea.
@@ -46,4 +46,5 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 # Extra warnings that will hopefully help debugging
-target_compile_options(kloenk PRIVATE -Wall -Wextra)
+# And just fail on first error
+target_compile_options(kloenk PRIVATE -Wall -Wextra -Wfatal-errors) 

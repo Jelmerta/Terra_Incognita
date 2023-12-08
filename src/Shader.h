@@ -1,7 +1,6 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-// #include <glad/glad.h>
 #include <glad/egl.h>
 #include <glad/gles2.h>
 #include <glm/glm.hpp>
@@ -10,7 +9,6 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <filesystem>
 
 class Shader
 {
@@ -221,3 +219,6 @@ private:
 
 //     glDeleteShader(vertexShader);
 //     glDeleteShader(fragmentShader);
+
+
+
