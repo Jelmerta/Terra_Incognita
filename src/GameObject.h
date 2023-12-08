@@ -20,6 +20,7 @@ public:
     // object state
     std::string name;
     glm::vec2   position;
+    glm::vec2   previousPosition; // We store the previous position such that collisions can be resolved by moving back to previous position (which, assuming collidables don't move, is a valid position without collision)
     float       scale;
     float       hitbox; // For now assumes hitbox is square
     glm::vec3   color;

@@ -54,5 +54,6 @@ private:
     std::map<std::string, Mesh> meshMap = {
         {"Plane", Mesh(planeVertices, planeIndices)},
         {"Cube", Mesh(cubeVertices, cubeIndices)},
+        {"Obstacle", Mesh(cubeVertices, cubeIndices)},
         {"Player", Mesh(cubeVertices, cubeIndices)}};
 };

@@ -22,24 +22,26 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "EventProcessor.h"
 #include "GameObject.h"
 #include "GameState.h"
 #include "InputHandler.h"
 #include "RenderSystem.h"
-#include "EventProcessor.h"
 
-#include <vector>
 #include <iostream>
+#include <vector>
 
-GameObject planeObject("Plane", glm::vec2(0.0f, 0.0f), 1.0f, 1.0f,
-                       glm::vec3(0.0f, 1.0f, 0.0f), 0, true, 0.0f);
-GameObject playerObject("Player", glm::vec2(0.0f, 0.0f), 1.0f, 1.0f,
-                        glm::vec3(1.0f, 0.0f, 0.0f), 0, true, 0.51f);
-std::vector gameObjects = {planeObject, playerObject};
+GameObject planeObject("Plane", glm::vec2(0.0f, 0.0f), 1.0f, 0.51f,
+                       glm::vec3(0.0f, 1.0f, 0.0f), 0, false, 0.0f);
+GameObject playerObject("Player", glm::vec2(0.0f, 0.0f), 1.0f, 0.51f,
+                        glm::vec3(1.0f, 0.0f, 0.0f), 0, false, 0.51f);
+GameObject obstacleObject("Obstacle", glm::vec2(1.5f, 0.0f), 1.0f, 0.51f,
+                          glm::vec3(0.0f, 0.0f, 1.0f), 0, true, 0.51f);
+std::vector gameObjects = {planeObject, playerObject, obstacleObject};
 GameState gameState(gameObjects);
 
-RenderSystem* renderSystem;
-InputHandler* inputHandler;
+RenderSystem *renderSystem;
+InputHandler *inputHandler;
 EventProcessor eventProcessor(&gameState);
 
 // Game loop
@@ -51,7 +53,8 @@ void render_frame(GLFWwindow *window) {
 
   renderSystem->render(gameState);
 
-  // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+  // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
+  // etc.)
   glfwSwapBuffers(window);
 }
 
@@ -97,7 +100,9 @@ int main(int argc, char **argv) {
   }
 
   glEnable(GL_DEPTH_TEST);
-  
+  glDepthMask(GL_TRUE);
+  glDepthFunc(GL_LEQUAL);
+  glDepthRangef(0.0f, 1.0f);
 
   renderSystem = new RenderSystem;
   inputHandler = new InputHandler;
