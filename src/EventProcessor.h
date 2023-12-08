@@ -35,7 +35,7 @@ public:
       }
     }
 
-    // TODO Empty events?
+    // TODO Empty list of events?
   }
 
 private:

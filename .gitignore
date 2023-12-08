@@ -6,3 +6,4 @@ build
 
 # IDE-related
 .vscode
+.cache

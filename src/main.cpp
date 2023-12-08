@@ -32,9 +32,9 @@
 #include <iostream>
 
 GameObject planeObject("Plane", glm::vec2(0.0f, 0.0f), 1.0f, 1.0f,
-                       glm::vec3(0.0f, 1.0f, 0.0f), 0, true);
+                       glm::vec3(0.0f, 1.0f, 0.0f), 0, true, 0.0f);
 GameObject playerObject("Player", glm::vec2(0.0f, 0.0f), 1.0f, 1.0f,
-                        glm::vec3(1.0f, 0.0f, 0.0f), 0, true);
+                        glm::vec3(1.0f, 0.0f, 0.0f), 0, true, 0.51f);
 std::vector gameObjects = {planeObject, playerObject};
 GameState gameState(gameObjects);
 
@@ -46,9 +46,7 @@ EventProcessor eventProcessor(&gameState);
 void render_frame(GLFWwindow *window) {
   std::vector<GameEvent> inputEvents = inputHandler->processInput(window);
 
-std::cout << inputEvents.size() << std::endl;
   // TODO Process logic / collision / physics
-//   std::vector<GameEvent> gameEvents
   eventProcessor.handleEvents(&inputEvents);
 
   renderSystem->render(gameState);
@@ -67,6 +65,7 @@ int main(int argc, char **argv) {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+  glfwWindowHint(GLFW_DEPTH_BITS, 24);
 
   GLFWwindow *window =
       glfwCreateWindow(GameConstants::WINDOW_WIDTH,
@@ -98,6 +97,7 @@ int main(int argc, char **argv) {
   }
 
   glEnable(GL_DEPTH_TEST);
+  
 
   renderSystem = new RenderSystem;
   inputHandler = new InputHandler;

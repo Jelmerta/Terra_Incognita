@@ -25,8 +25,9 @@ public:
     glm::vec3   color;
     float       rotation; // in degrees
     bool        isSolid;
+    float       distanceFromCenterOfModelToBottom; // A model might need to be moved up such that it appears above a plane. For now hardcoded in this silly variable
     // constructor(s)
-    GameObject(std::string name, glm::vec2 position, float scale, float hitbox, glm::vec3 color, float rotation, bool isSolid);
+    GameObject(std::string name, glm::vec2 position, float scale, float hitbox, glm::vec3 color, float rotation, bool isSolid, float distanceFromCenterOfModelToBottom);
 
     std::string getName() {
         return name;

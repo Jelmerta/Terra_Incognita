@@ -40,8 +40,10 @@ private:
     std::cout << gameObject.position.x << " " << gameObject.position.y << std::endl;
     model = glm::translate(
         glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
-        glm::vec3(gameObject.position.x, -0.5f, gameObject.position.y)); // TODO 0.5f is only for things other than plane?
+        glm::vec3(gameObject.position.x, gameObject.position.y, gameObject.distanceFromCenterOfModelToBottom)); // TODO 0.5f is only for things other than plane?
     shader->setMat4("model", model);
+
+    shader->setVec4("ourColor", glm::vec4(gameObject.color, 1));
 
     mesh.draw(*shader);
   }
