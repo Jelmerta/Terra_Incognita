@@ -47,15 +47,10 @@ EventProcessor eventProcessor(&gameState);
 // Game loop
 void render_frame(GLFWwindow *window) {
   std::vector<GameEvent> inputEvents = inputHandler->processInput(window);
-
-  // TODO Process logic / collision / physics
   eventProcessor.handleEvents(&inputEvents);
-
   renderSystem->render(gameState);
-
-  // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
-  // etc.)
-  glfwSwapBuffers(window);
+  glfwSwapBuffers(
+      window); // Also polls IO events (keys pressed/released, mouse moved etc.)
 }
 
 int main(int argc, char **argv) {
@@ -108,18 +103,12 @@ int main(int argc, char **argv) {
   inputHandler = new InputHandler;
 
 #ifdef __EMSCRIPTEN__
-  emscripten_set_main_loop_arg((em_arg_callback_func)render_frame, window, 60,
-                               1);
+  emscripten_set_main_loop_arg((em_arg_callback_func)render_frame, window, 60, 1);
 #else
   while (!glfwWindowShouldClose(window)) {
     render_frame(window);
   }
 #endif
-
-  // Cleanup code... Don't just delete this, make sure this gets cleaned up
-  // glDeleteVertexArrays(1, &VAO);
-  // glDeleteBuffers(1, &VBO);
-  // glDeleteProgram(shaderProgram);
 
   glfwTerminate();
   return 0;

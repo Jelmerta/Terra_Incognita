@@ -37,7 +37,6 @@ private:
     // // Move cube around based on input
     glm::mat4 model = glm::mat4(1.0f);
 
-    std::cout << gameObject.position.x << " " << gameObject.position.y << std::endl;
     model = glm::translate(
         glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
         glm::vec3(gameObject.position.x, gameObject.position.y, gameObject.distanceFromCenterOfModelToBottom)); // TODO 0.5f is only for things other than plane?
@@ -82,3 +81,9 @@ private:
 // // glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 // Applying transformation to mesh?
+
+
+  // Cleanup code... Don't just delete this, make sure this gets cleaned up
+  // glDeleteVertexArrays(1, &VAO);
+  // glDeleteBuffers(1, &VBO);
+  // glDeleteProgram(shaderProgram);

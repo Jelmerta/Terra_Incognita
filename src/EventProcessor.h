@@ -13,7 +13,6 @@ public:
 
   void handleEvents(std::vector<GameEvent> *gameEvents) {
     for (GameEvent gameEvent : *gameEvents) {
-      std::cout << gameEvent.getName() << std::endl;
       if (gameEvent.getName() == "moveNorth") {
         GameObject *player = gameState->getGameObject("Player");
         movementSystem.moveNorth(player);
@@ -52,9 +51,7 @@ private:
                        std::map<std::string, GameObject> gameObjects) {
     for (auto gameObject : gameObjects) {
       if (gameObject.second.isSolid) {
-        std::cout << "Solid object found" << std::endl;
         if (checkCollision(*object, gameObject.second)) {
-            std::cout << "Collision!" << std::endl;
             object->position = object->previousPosition;
         }
       }
