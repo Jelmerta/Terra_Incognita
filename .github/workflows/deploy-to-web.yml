@@ -10,13 +10,29 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v2
 
+      - name: Setup cmake
+        # uses: jwlawson/actions-setup-cmake@v1.14 Not sure which cmake dependency is faster.
+        uses: lukka/get-cmake@latest
+
       - name: Install Emscripten
         uses: mymindstorm/setup-emsdk@v13
+        with:
+          actions-cache-folder: 'emsdk-cache'
 
-      - name: Compile WASM/JS/HTML
+      # We tried to compile using a container that has emsdk, but this didn't seem to work. Build directory being placed in host directory instead of the github run? Command is something like this: docker run --rm -v $(pwd)/src -u $(id -u):$(id -g) emscripten/emsdk emcmake cmake -B ../build 
+      - name: Compile WASM/JS/HTML    
         run: mkdir build && emcmake cmake -B build && cd build && make
 
+      - name: Build
+        if: ${{ env.ACT }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: hydrogax/kloenk:newest
+
       - name: Build and push Docker images
+        if: ${{ !env.ACT }}
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -28,7 +44,7 @@ jobs:
 
   deploy:
     needs: build
-    
+    if: ${{ !github.event.act }}
     runs-on: ubuntu-latest
     
     steps:

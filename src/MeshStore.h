@@ -5,7 +5,7 @@
 class MeshStore
 {
 public:
-    Mesh get(std::string name)
+    Mesh get(std::string name) const
     {
         return meshMap.at(name); // TODO Potential null
     }

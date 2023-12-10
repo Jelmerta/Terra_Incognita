@@ -3,8 +3,6 @@
 #include "GameObject.h"
 #include "GameState.h"
 #include "MovementSystem.h"
-#include <iostream>
-#include <iterator>
 #include <vector>
 
 class EventProcessor {

@@ -31,24 +31,24 @@
 #include <iostream>
 #include <vector>
 
-GameObject planeObject("Plane", glm::vec2(0.0f, 0.0f), 1.0f, 0.51f,
-                       glm::vec3(0.0f, 1.0f, 0.0f), 0, false, 0.0f);
-GameObject playerObject("Player", glm::vec2(0.0f, 0.0f), 1.0f, 0.51f,
-                        glm::vec3(1.0f, 0.0f, 0.0f), 0, false, 0.51f);
-GameObject obstacleObject("Obstacle", glm::vec2(1.5f, 0.0f), 1.0f, 0.51f,
-                          glm::vec3(0.0f, 0.0f, 1.0f), 0, true, 0.51f);
+const GameObject planeObject("Plane", glm::vec2(0.0f, 0.0f), 1.0f, 0.51f,
+                             glm::vec3(0.0f, 1.0f, 0.0f), 0, false, 0.0f);
+const GameObject playerObject("Player", glm::vec2(0.0f, 0.0f), 1.0f, 0.51f,
+                              glm::vec3(1.0f, 0.0f, 0.0f), 0, false, 0.51f);
+const GameObject obstacleObject("Obstacle", glm::vec2(1.5f, 0.0f), 1.0f, 0.51f,
+                                glm::vec3(0.0f, 0.0f, 1.0f), 0, true, 0.51f);
 std::vector gameObjects = {planeObject, playerObject, obstacleObject};
 GameState gameState(gameObjects);
 
-RenderSystem *renderSystem;
-InputHandler *inputHandler;
+const RenderSystem *renderSystem;
+const InputHandler *inputHandler;
 EventProcessor eventProcessor(&gameState);
 
 // Game loop
 void render_frame(GLFWwindow *window) {
   std::vector<GameEvent> inputEvents = inputHandler->processInput(window);
   eventProcessor.handleEvents(&inputEvents);
-  renderSystem->render(gameState);
+  renderSystem->render(&gameState);
   glfwSwapBuffers(
       window); // Also polls IO events (keys pressed/released, mouse moved etc.)
 }
@@ -103,7 +103,8 @@ int main(int argc, char **argv) {
   inputHandler = new InputHandler;
 
 #ifdef __EMSCRIPTEN__
-  emscripten_set_main_loop_arg((em_arg_callback_func)render_frame, window, 60, 1);
+  emscripten_set_main_loop_arg((em_arg_callback_func)render_frame, window, 60,
+                               1);
 #else
   while (!glfwWindowShouldClose(window)) {
     render_frame(window);

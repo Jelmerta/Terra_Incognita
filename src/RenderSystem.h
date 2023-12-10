@@ -4,21 +4,17 @@
 #include "Mesh.h"
 #include "MeshStore.h"
 #include "Shader.h"
-#include <iostream>
 
 class RenderSystem {
 public:
-  // TODO Reference to gamestate
-  void render(GameState gameState) {
-    // Clear screen
+  void render(GameState *gameState) const {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
     shader->use();
     performCameraTransformations();
 
-    for (auto x : gameState.getGameObjects()) {
+    for (auto x : gameState->getGameObjects()) {
       render(x.second);
     }
 
@@ -30,7 +26,7 @@ private:
   Shader *shader = new Shader("resources/shaders/vertex/basic_positions.vs",
                               "resources/shaders/fragment/basic_colours.fs");
   MeshStore meshStore;
-  void render(GameObject gameObject) {
+  void render(GameObject gameObject) const {
     Mesh mesh = meshStore.get(gameObject.getName());
     // Apply transformation to mesh?
 
@@ -39,7 +35,8 @@ private:
 
     model = glm::translate(
         glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
-        glm::vec3(gameObject.position.x, gameObject.position.y, gameObject.distanceFromCenterOfModelToBottom)); // TODO 0.5f is only for things other than plane?
+        glm::vec3(gameObject.position.x, gameObject.position.y,
+                  gameObject.distanceFromCenterOfModelToBottom));
     shader->setMat4("model", model);
 
     shader->setVec4("ourColor", glm::vec4(gameObject.color, 1));
@@ -47,7 +44,7 @@ private:
     mesh.draw(*shader);
   }
 
-  void performCameraTransformations() {
+  void performCameraTransformations() const {
     glm::mat4 model = glm::mat4(
         1.0f); // make sure to initialize matrix to identity matrix first
     glm::mat4 view = glm::mat4(1.0f);
@@ -82,8 +79,7 @@ private:
 
 // Applying transformation to mesh?
 
-
-  // Cleanup code... Don't just delete this, make sure this gets cleaned up
-  // glDeleteVertexArrays(1, &VAO);
-  // glDeleteBuffers(1, &VBO);
-  // glDeleteProgram(shaderProgram);
+// Cleanup code... Don't just delete this, make sure this gets cleaned up
+// glDeleteVertexArrays(1, &VAO);
+// glDeleteBuffers(1, &VBO);
+// glDeleteProgram(shaderProgram);

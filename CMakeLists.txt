@@ -28,6 +28,7 @@ if(EMSCRIPTEN)
         -sUSE_GLFW=3 # Use Emscripten-provided GLFW
         -sMAX_WEBGL_VERSION=2 # Defaults to WebGL 2.0 implementation, but allows backwards compatibility
         -sASSERTIONS # Debug info
+        --shell-file=../resources/web/shell.html
     )
     set_target_properties(kloenk
         PROPERTIES SUFFIX ".html")

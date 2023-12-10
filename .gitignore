@@ -7,3 +7,6 @@ build
 # IDE-related
 .vscode
 .cache
+
+# Secrets
+.env

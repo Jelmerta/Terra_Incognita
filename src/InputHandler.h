@@ -3,7 +3,7 @@
 #include <vector>
 class InputHandler {
 public:
-  std::vector<GameEvent> processInput(GLFWwindow *window) {
+  std::vector<GameEvent> processInput(GLFWwindow *window) const {
     glfwPollEvents();
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
