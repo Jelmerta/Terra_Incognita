@@ -19,16 +19,16 @@ class GameObject
 public:
     // object state
     std::string name;
-    glm::vec2   position;
-    glm::vec2   previousPosition; // We store the previous position such that collisions can be resolved by moving back to previous position (which, assuming collidables don't move, is a valid position without collision)
+    glm::vec3   position;
+    glm::vec3   previousPosition; // We store the previous position such that collisions can be resolved by moving back to previous position (which, assuming collidables don't move, is a valid position without collision)
     float       scale;
     float       hitbox; // For now assumes hitbox is square
     glm::vec3   color;
     float       rotation; // in degrees
     bool        isSolid;
-    float       distanceFromCenterOfModelToBottom; // A model might need to be moved up such that it appears above a plane. For now hardcoded in this silly variable
+    // float       distanceFromCenterOfModelToBottom; // A model might need to be moved up such that it appears above a plane. For now hardcoded in this silly variable
     // constructor(s)
-    GameObject(std::string name, glm::vec2 position, float scale, float hitbox, glm::vec3 color, float rotation, bool isSolid, float distanceFromCenterOfModelToBottom);
+    GameObject(std::string name, glm::vec3 position, float scale, float hitbox, glm::vec3 color, float rotation, bool isSolid);
 
     std::string getName() {
         return name;

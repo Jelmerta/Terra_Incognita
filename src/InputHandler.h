@@ -1,5 +1,5 @@
-#include <GLFW/glfw3.h>
 #include "GameEvent.h"
+#include <GLFW/glfw3.h>
 #include <vector>
 class InputHandler {
 public:
@@ -27,6 +27,14 @@ public:
       inputEvents.push_back(GameEvent("moveWest"));
     }
 
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+      inputEvents.push_back(GameEvent("moveUp"));
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+      inputEvents.push_back(GameEvent("moveDown"));
+    }
+
     return inputEvents;
   }
 };
@@ -39,6 +47,6 @@ public:
 //         glfwSetWindowShouldClose(window, GL_TRUE);
 // }
 
-    // glfwSetKeyCallback(window, key_callback);
+// glfwSetKeyCallback(window, key_callback);
 
-    // glfwPollEvents();
+// glfwPollEvents();

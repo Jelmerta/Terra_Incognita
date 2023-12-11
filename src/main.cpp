@@ -31,13 +31,17 @@
 #include <iostream>
 #include <vector>
 
-const GameObject planeObject("Plane", glm::vec2(0.0f, 0.0f), 1.0f, 0.51f,
-                             glm::vec3(0.0f, 1.0f, 0.0f), 0, false, 0.0f);
-const GameObject playerObject("Player", glm::vec2(0.0f, 0.0f), 1.0f, 0.51f,
-                              glm::vec3(1.0f, 0.0f, 0.0f), 0, false, 0.51f);
-const GameObject obstacleObject("Obstacle", glm::vec2(1.5f, 0.0f), 1.0f, 0.51f,
-                                glm::vec3(0.0f, 0.0f, 1.0f), 0, true, 0.51f);
-std::vector gameObjects = {planeObject, playerObject, obstacleObject};
+// Names need to be different in order for everything to be rendered
+const GameObject planeObject("Plane", glm::vec3(0.0f, -0.5f, 0.0f), 1.0f,
+                             0.51f, glm::vec3(0.0f, 1.0f, 0.0f), 0,
+                             false); // For now like a cube
+const GameObject playerObject("Player", glm::vec3(0.0f, 0.51f, 0.0f), 1.0f,
+                              0.51f, glm::vec3(1.0f, 0.0f, 0.0f), 0, false);
+const GameObject obstacleObject("Obstacle", glm::vec3(1.5f, 0.0f, 0.0f), 1.0f,
+                                0.51f, glm::vec3(0.0f, 0.0f, 1.0f), 0, true);
+const GameObject lowerPlane("lowerPlane", glm::vec3(0.0f, -3.0f, 0.0f), 1.0f, 0.51f,
+                            glm::vec3(1.0f, 0.0f, 1.0f), 0, false);
+std::vector gameObjects = {planeObject, playerObject, obstacleObject, lowerPlane};
 GameState gameState(gameObjects);
 
 const RenderSystem *renderSystem;

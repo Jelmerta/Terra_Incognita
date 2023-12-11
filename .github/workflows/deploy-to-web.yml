@@ -10,9 +10,10 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v2
 
+        # Not sure which cmake dependency is faster. lukka took 2m16s first time. Seems to be only required with act as cmake can be resolved in github pipeline
       - name: Setup cmake
-        # uses: jwlawson/actions-setup-cmake@v1.14 Not sure which cmake dependency is faster.
-        uses: lukka/get-cmake@latest
+        uses: jwlawson/actions-setup-cmake@v1.14
+        # uses: lukka/get-cmake@latest
 
       - name: Install Emscripten
         uses: mymindstorm/setup-emsdk@v13
@@ -23,7 +24,7 @@ jobs:
       - name: Compile WASM/JS/HTML    
         run: mkdir build && emcmake cmake -B build && cd build && make
 
-      - name: Build
+      - name: Build local container
         if: ${{ env.ACT }}
         uses: docker/build-push-action@v5
         with:

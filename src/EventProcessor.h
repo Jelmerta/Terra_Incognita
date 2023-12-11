@@ -34,6 +34,18 @@ public:
         movementSystem.moveWest(player);
         handleCollision(player, gameState->getGameObjects());
       }
+
+      if (gameEvent.getName() == "moveUp") {
+        GameObject *player = gameState->getGameObject("Player");
+        movementSystem.moveUp(player);
+        handleCollision(player, gameState->getGameObjects());
+      }
+
+      if (gameEvent.getName() == "moveDown") {
+        GameObject *player = gameState->getGameObject("Player");
+        movementSystem.moveDown(player);
+        handleCollision(player, gameState->getGameObjects());
+      }
     }
 
     // TODO Empty list of events?
@@ -50,7 +62,7 @@ private:
     for (auto gameObject : gameObjects) {
       if (gameObject.second.isSolid) {
         if (checkCollision(*object, gameObject.second)) {
-            object->position = object->previousPosition;
+          object->position = object->previousPosition;
         }
       }
     }
@@ -58,13 +70,22 @@ private:
 
   // We assume for now that all objects' hitbox are square
   bool checkCollision(GameObject object1, GameObject object2) {
-    bool collisionX = object1.position.x + object1.hitbox >= object2.position.x - object2.hitbox &&
-    object2.position.x + object2.hitbox >= object1.position.x - object1.hitbox;
+    bool collisionX = object1.position.x + object1.hitbox >=
+                          object2.position.x - object2.hitbox &&
+                      object2.position.x + object2.hitbox >=
+                          object1.position.x - object1.hitbox;
 
-    bool collisionY = object1.position.y + object1.hitbox >= object2.position.y - object2.hitbox &&
-    object2.position.y + object2.hitbox >= object1.position.y - object1.hitbox;
+    bool collisionY = object1.position.y + object1.hitbox >=
+                          object2.position.y - object2.hitbox &&
+                      object2.position.y + object2.hitbox >=
+                          object1.position.y - object1.hitbox;
+
+    bool collisionZ = object1.position.z + object1.hitbox >=
+                          object2.position.z - object2.hitbox &&
+                      object2.position.z + object2.hitbox >=
+                          object1.position.z - object1.hitbox;
 
     // collision only if on both axes
-    return collisionX && collisionY;
+    return collisionX && collisionY && collisionZ;
   }
 };
