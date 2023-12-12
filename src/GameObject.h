@@ -33,6 +33,10 @@ public:
     std::string getName() {
         return name;
     }
+
+    void gameTick() {
+        
+    }
 };
 
 #endif

@@ -46,6 +46,12 @@ public:
         movementSystem.moveDown(player);
         handleCollision(player, gameState->getGameObjects());
       }
+
+      if (gameEvent.getName() == "playerGravity") { // Probably not something we should have as an "event", and instead just a "tick" or something
+        GameObject *player = gameState->getGameObject("Player");
+        movementSystem.moveDown(player);
+        handleCollision(player, gameState->getGameObjects());
+      }
     }
 
     // TODO Empty list of events?

@@ -33,14 +33,14 @@
 
 // Names need to be different in order for everything to be rendered
 const GameObject planeObject("Plane", glm::vec3(0.0f, -0.5f, 0.0f), 1.0f,
-                             0.51f, glm::vec3(0.0f, 1.0f, 0.0f), 0,
-                             false); // For now like a cube
-const GameObject playerObject("Player", glm::vec3(0.0f, 0.51f, 0.0f), 1.0f,
+                             0.50f, glm::vec3(0.0f, 1.0f, 0.0f), 0,
+                             true); // For now like a cube
+const GameObject playerObject("Player", glm::vec3(0.0f, 1.51f, 0.0f), 1.0f,
                               0.51f, glm::vec3(1.0f, 0.0f, 0.0f), 0, false);
 const GameObject obstacleObject("Obstacle", glm::vec3(1.5f, 0.0f, 0.0f), 1.0f,
-                                0.51f, glm::vec3(0.0f, 0.0f, 1.0f), 0, true);
-const GameObject lowerPlane("lowerPlane", glm::vec3(0.0f, -3.0f, 0.0f), 1.0f, 0.51f,
-                            glm::vec3(1.0f, 0.0f, 1.0f), 0, false);
+                                0.50f, glm::vec3(0.0f, 0.0f, 1.0f), 0, true);
+const GameObject lowerPlane("lowerPlane", glm::vec3(0.0f, -3.0f, 0.0f), 1.0f, 0.50f,
+                            glm::vec3(1.0f, 0.0f, 1.0f), 0, true);
 std::vector gameObjects = {planeObject, playerObject, obstacleObject, lowerPlane};
 GameState gameState(gameObjects);
 
@@ -51,6 +51,7 @@ EventProcessor eventProcessor(&gameState);
 // Game loop
 void render_frame(GLFWwindow *window) {
   std::vector<GameEvent> inputEvents = inputHandler->processInput(window);
+  inputEvents.push_back(GameEvent("playerGravity")); // Every frame, we just try to move down to act as gravity
   eventProcessor.handleEvents(&inputEvents);
   renderSystem->render(&gameState);
   glfwSwapBuffers(
